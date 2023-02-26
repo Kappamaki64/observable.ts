@@ -1,5 +1,10 @@
+import { ObservableInterface } from './observables/interface/observableInterface'
 import { RecursiveReactiveObject } from './observables/interface/reactiveObjectInterface'
+import { ReactivePropertyInterface } from './observables/interface/reactivePropertyInterface'
+import { Observable } from './observables/observable'
+import { ObserveOnly } from './observables/observeOnly'
 import { ReactiveObject } from './observables/reactiveObject'
+import { ReactiveProperty } from './observables/reactiveProperty'
 
 interface TestType {
   [key: number]: string
@@ -10,6 +15,60 @@ interface TestType {
   }
   power: number
   target: string[]
+}
+
+function exampleFunctionOfObservable(): void {
+  const observable: ObservableInterface<number> = new Observable()
+  observable
+    .filter((arg): boolean => {
+      return arg % 2 === 0
+    })
+    .filter((arg) => arg > 5)
+    .addObserver((arg: number): void => {
+      console.log(arg)
+    })
+
+  for (let i = 0; i < 10; i++) observable.notify(i)
+  // expected output:
+  // 6
+  // 8
+}
+
+function exampleFunctionOfReactiveProperty(): void {
+  const reactiveNumber: ReactivePropertyInterface<number> =
+    new ReactiveProperty(0)
+  reactiveNumber.addObserver((number): void => {
+    console.log(`notified number: ${number}`)
+  })
+  console.log(`initial number: ${reactiveNumber.value}`)
+  // expected output:
+  // initial number: 0
+  reactiveNumber.set(1)
+  // expected output:
+  // notified number: 1
+  reactiveNumber.value = 2
+  // expected output:
+  // notified number: 2
+  reactiveNumber.value += 1
+  // expected output:
+  // notified number: 3
+}
+
+function exampleFunctionOfObserveOnly(
+  reactiveNumber: ObserveOnly<ReactivePropertyInterface<number>>
+): void {
+  // addObserver, removeObserver, clearObserverなどは使用できる
+  reactiveNumber.addObserver((number): void => {
+    console.log(`notified number: ${number}`)
+  })
+
+  // 値を読み取ることもできる
+  console.log(`initial number: ${reactiveNumber.value}`)
+
+  // ただし、以下のように値を変えようとするとコンパイルエラーになる
+  // reactiveNumber.set(1) // プロパティ 'set' は型 'ObserveOnly<ReactivePropertyInterface<number>>' に存在しません。
+  // reactiveNumber.value = 2 // 読み取り専用プロパティであるため、'value' に代入することはできません。
+  // reactiveNumber.value += 1 // 読み取り専用プロパティであるため、'value' に代入することはできません。
 }
 
 function exampleFunctionOfReactiveObject(): void {
@@ -100,4 +159,7 @@ function exampleFunctionOfReactiveObject(): void {
   })
 }
 
+exampleFunctionOfObservable()
+exampleFunctionOfReactiveProperty()
+exampleFunctionOfObserveOnly(new ReactiveProperty(0))
 exampleFunctionOfReactiveObject()

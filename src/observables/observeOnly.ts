@@ -1,3 +1,5 @@
+import { ObservableInterface } from './interface/observableInterface'
+
 // ObserveOnly<>されたObservableのinterface
 // Observableの型引数が取得出来ないためinterfaceで定義できなかった
 type ObserveOnlyInterface =
@@ -24,6 +26,6 @@ type ObserveOnlyInterface =
   | 'onSetValueOf'
   | 'onDelete'
 
-export type ObserveOnly<O> = {
+export type ObserveOnly<O extends ObservableInterface<unknown>> = {
   readonly [key in keyof O & ObserveOnlyInterface]: O[key]
 }
