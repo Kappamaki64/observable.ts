@@ -1,0 +1,2 @@
+# observable.ts
+リアクティブプログラミングのための簡単なTypeScriptのソースコードです
