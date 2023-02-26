@@ -38,12 +38,15 @@ reactiveNumber.addObserver((number): void => {
 console.log(`initial number: ${reactiveNumber.value}`)
 // expected output:
 // initial number: 0
+
 reactiveNumber.set(1)
 // expected output:
 // notified number: 1
+
 reactiveNumber.value = 2
 // expected output:
 // notified number: 2
+
 reactiveNumber.value += 1
 // expected output:
 // notified number: 3
